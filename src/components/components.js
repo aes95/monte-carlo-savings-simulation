@@ -35,10 +35,21 @@ const Chart = function Chart(props) {
       React.createElement(createPlotlyComponent(Plotly),{
           data: props.data,
           layout: {
-              title:{
-                  text: 'Simulated Portfolio Balances',
-              }
-          }
+            title:{
+                text: 'Simulated Portfolio Balances',
+            },
+            legend: {
+              orientation: "h"
+            },
+            autosize: true,
+            margin:{r: 30, l: 40, t: 80, b: 40,},
+          },
+          useResizeHandler: true,
+          style: {
+            width: "100%",
+            height: "100%",
+            overflow: "auto",
+          },
       })
   )   
 }

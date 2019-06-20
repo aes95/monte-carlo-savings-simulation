@@ -98,8 +98,9 @@ const simRunner = function runSimulation(state){
         const cashflows = flow(state.savings, state.years_to_ret, state.duration,
             state.contribution, state.ret_income);
         const results = [];
+        const asset_data = JSON.parse(window.localStorage.getItem('asset_data'));
         for (let i = 0; i < 100; i += 1){
-            const returns =  wReturnArr(state.asset_data, state.allocation, state.duration);
+            const returns =  wReturnArr(asset_data, state.allocation, state.duration);
             results.push(outcome(returns, cashflows ));
         }
         resolve(results.sort((arr1, arr2)=>arr1[arr1.length -1] - arr2[arr2.length-1]))

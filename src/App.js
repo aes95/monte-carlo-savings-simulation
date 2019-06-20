@@ -25,7 +25,6 @@ class Data extends React.Component{
         end_equity: '20',
         end_bond: '80'
       },
-      asset_data: {},
       returns: [],
       outcomes: {},
     };
@@ -52,18 +51,17 @@ class Data extends React.Component{
       if (bond_data.length < 1 || equity_data.length <1){
         throw new Error('API call returned no data')
       }
-      this.setState({
-        asset_data: {
-          bond: bond_data,
-          equity: equity_data
-        }
-      })
-    })
-    .catch((error) => {
-      console.log(error);
-      document.getElementById('logger').innerHTML = error;
-    })
-  }
+      const asset_data = {
+        bond: bond_data,
+        equity: equity_data,
+      }
+      window.localStorage.setItem('asset_data', JSON.stringify(asset_data))
+  })
+  .catch((error) => {
+    console.log(error);
+    document.getElementById('logger').innerHTML = error;
+  })
+}
 
   handleSim(){
     simRunner(this.state)

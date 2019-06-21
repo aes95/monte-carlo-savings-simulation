@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import {Decimal} from 'decimal.js';
-import { wReturnArr, rand, flow, outcome, simRunner } from './simulation';
+import { wReturnArr, rand, flow, outcome, simRunner, maxDrawdown } from './simulation';
 import { test_state } from './components/state.testing';
 
 
@@ -87,5 +87,11 @@ test('Returns are properly accrued', ()=> {
 
 test('Simulation is ran properly', ()=>{
   const sim1 = simRunner(test_state);
-  console.log(sim1 => sim1.JSON())
+  
+})
+
+test('Drawdown is calculated properly', ()=>{
+  const values = [100, 150, 90, 125, 80, 225].map(i=> Decimal(i));
+  const res = maxDrawdown(values);
+  expect(res).toBe('46.67')
 })

@@ -66,6 +66,7 @@ class Data extends React.Component{
   handleSim(){
     simRunner(this.state)
     .then((scenarios)=>{
+      window.localStorage.setItem('scenarios', JSON.stringify(scenarios))
       this.setState({
         loaded: true,
         loading: false,
@@ -102,7 +103,7 @@ class Data extends React.Component{
   
 
   render(){
-    const chart_x_axis = Array.from({length: this.state.duration * 12 +1},(v,k)=>k/12);
+    
     return (
       <div className='container-fluid'>
 
@@ -110,26 +111,8 @@ class Data extends React.Component{
             state={this.state} handleAllocChange={this.handleAllocChange}
             handleSim={this.handleSim}  />
 
-        {this.state.loaded && <Results title={this.state.outcomes.survival} data={
-          [{
-            x: chart_x_axis,
-            y: this.state.outcomes.median.map( i => parseInt(i.toString())),
-            type: 'scatter',
-            name: '50th Percentile',
-          },
-          {
-            x: chart_x_axis,
-            y: this.state.outcomes.buttom10.map( i => parseInt(i.toString())),
-            type: 'scatter',
-            name: '10th Percentile'
-          },
-          {
-            x: chart_x_axis,
-            y: this.state.outcomes.top10.map( i => parseInt(i.toString())),
-            type: 'scatter',
-            name: '90th Percentile'
-          },]
-        }   />}
+        {this.state.loaded && <Results title={this.state.outcomes.survival} 
+          data={this.state.outcomes} duration={this.state.duration} />}
 
       </div>      
     )

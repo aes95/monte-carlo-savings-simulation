@@ -2,6 +2,8 @@
 
 import React from 'react';
 import createPlotlyComponent from 'react-plotly.js/factory'
+import { Decimal } from 'decimal.js';
+import { maxDrawdown } from '../simulation';
 
 const Field = function FieldArea(props){
     return(
@@ -18,31 +20,58 @@ const Field = function FieldArea(props){
 const Results = class SimulationResults extends React.Component{
   constructor(props){
     super(props);
+    this.myRef = React.createRef();
   }
   componentDidMount(){
-
+    setTimeout(()=>{
+      const chart_top = document.querySelector('.js-plotly-plot');
+      chart_top.scrollIntoView({behavior: "smooth"});
+    },10)
   }
 
   render(){
     return(
-      <Chart data={this.props.data} />
+      <React.Fragment>
+        <Chart data={this.props.data} duration={this.props.duration}/>
+        <StatTable data={this.props.data} />
+      </React.Fragment>
     )
   }
 }
 
 const Chart = function Chart(props) {
+  const chart_x_axis = Array.from({length: props.duration * 12 +1},(v,k)=>k/12);
+  const data = [{
+    x: chart_x_axis,
+    y: props.data.median.map( i => parseInt(i.toString())),
+    type: 'scatter',
+    name: '50th Percentile',
+  },
+  {
+    x: chart_x_axis,
+    y: props.data.buttom10.map( i => parseInt(i.toString())),
+    type: 'scatter',
+    name: '10th Percentile'
+  },
+  {
+    x: chart_x_axis,
+    y: props.data.top10.map( i => parseInt(i.toString())),
+    type: 'scatter',
+    name: '90th Percentile'
+  },]
   return (
       React.createElement(createPlotlyComponent(Plotly),{
-          data: props.data,
+          data: data,
+          config: { 
+            displaylogo: false, 
+            displayModeBar: false,
+            scrollZoom: false,
+          },
           layout: {
-            title:{
-                text: 'Simulated Portfolio Balances',
-            },
-            legend: {
-              orientation: "h"
-            },
+            title:{ text: 'Simulated Portfolio Balances' },
+            legend: { orientation: "h" },
             autosize: true,
-            margin:{r: 30, l: 40, t: 80, b: 40,},
+            margin:{ r: 30, l: 40, t: 80, b: 40 },
           },
           useResizeHandler: true,
           style: {
@@ -52,6 +81,40 @@ const Chart = function Chart(props) {
           },
       })
   )   
+}
+
+const StatTable = function SummaryStatTable(props){
+  const length = props.data.median.length;
+  Decimal.set({rounding:0})
+  return(
+    <div className='table-responsive'>
+      <table className="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col">10th Percentile	</th>
+            <th scope="col">50th Percentile	</th>
+            <th scope="col">90th Percentile	</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">Ending Balance</th>
+            <td>{ props.data.buttom10[length -1].round().toString() } </td>
+            <td>{ props.data.median[length -1].round().toString() }</td>
+            <td>{ props.data.top10[length -1].round().toString() } </td>
+          </tr>
+          <tr>
+            <th scope="row">Maximum Drawdown</th>
+            <td>{ `-${maxDrawdown(props.data.buttom10)}%` } </td>
+            <td>{ `-${maxDrawdown(props.data.median)}%` }</td>
+            <td>{ `-${maxDrawdown(props.data.top10)}%` } </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  )
 }
 
 const Spinner = class SpinnerButton extends React.Component{
@@ -104,7 +167,7 @@ const Form = function InputForm(props) {
         {props.state.loading
         ? <Spinner data={props.state} handler={props.handleSim} /> 
         : <button type='submit' id='submit-btn' 
-          className='btn btn-primary'>Submit!</button>}
+          className='btn btn-primary'>Simulate!</button>}
         
       </form>
   )

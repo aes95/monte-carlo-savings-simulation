@@ -1,4 +1,4 @@
-import {Decimal} from 'decimal.js';
+import { Decimal } from 'decimal.js';
 
 const rand = function pickRandom(data, period){
     /**
@@ -117,4 +117,18 @@ const survival = function calcSurvivalRate(scenarios){
     return Decimal(100).minus(fail_rate).toString();
 }
 
-export {rand, wReturnArr, flow, outcome, simRunner, survival};
+const maxDrawdown = function calcMaxDrawdown(values){
+  let MMD = Decimal(0);
+  let peak = Decimal(-Infinity);
+  for (let i = 0; i < values.length; i += 1){
+    peak = values[i].greaterThan(peak) ? values[i] : peak;
+    const step1 = peak.minus(values[i]);
+    const step2 = step1.div(peak);
+    const DD = step2.times(100);
+    //const DD = 100.0 * (peak - values[i]) / peak;
+    MMD = DD.greaterThan(MMD) ? DD : MMD;
+  }
+  return MMD.toDecimalPlaces(2).toString();
+}
+
+export {rand, wReturnArr, flow, outcome, simRunner, survival, maxDrawdown};

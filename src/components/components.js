@@ -100,9 +100,9 @@ const StatTable = function SummaryStatTable(props){
         <tbody>
           <tr>
             <th scope="row">Ending Balance</th>
-            <td>{ props.data.buttom10[length -1].round().toString() } </td>
-            <td>{ props.data.median[length -1].round().toString() }</td>
-            <td>{ props.data.top10[length -1].round().toString() } </td>
+            <td>{ Intl.NumberFormat().format(props.data.buttom10[length -1].round())  } </td>
+            <td>{ Intl.NumberFormat().format(props.data.median[length -1].round())  } </td>
+            <td>{ Intl.NumberFormat().format(props.data.top10[length -1].round())  } </td>
           </tr>
           <tr>
             <th scope="row">Maximum Drawdown</th>

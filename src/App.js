@@ -31,7 +31,7 @@ class Data extends React.Component{
   }
 
   componentDidMount(){
-    fetch('http://127.0.0.1:8000/api/index/')
+    fetch('https://calc-project.herokuapp.com/api/index/')
     .then((res) => {
       if (!res.ok){
         throw new Error('Network response was not ok.');
@@ -106,7 +106,8 @@ class Data extends React.Component{
     
     return (
       <div className='container-fluid'>
-
+        <p>A Monte Carlo simulator to project your future financial position, given your individual parameters and historical market performance. This simulation supports dynamic changes to asset allocation throughout the simulation period. </p>
+        <p>This project is for illustrative purposes only. This tool should not be used for financial or investment advice. This tool has not been subject to rigorous testing and may contain errors.</p>
         <Form handleSubmit={this.handleSubmit} handler={this.handleChange} 
             state={this.state} handleAllocChange={this.handleAllocChange}
             handleSim={this.handleSim}  />

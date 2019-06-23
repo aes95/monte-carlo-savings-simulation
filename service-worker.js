@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/monte-carlo-savings-simulation/precache-manifest.fb96b2a76b742f2b10a15b60d9357cea.js"
+  "/monte-carlo-savings-simulation/precache-manifest.377b20e986f3db9ddf53df2577eba472.js"
 );
 
 self.addEventListener('message', (event) => {

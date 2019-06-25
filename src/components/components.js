@@ -4,6 +4,8 @@ import React from 'react';
 import createPlotlyComponent from 'react-plotly.js/factory'
 import { Decimal } from 'decimal.js';
 import { maxDrawdown } from '../simulation';
+import Cleave from 'cleave.js/react';
+
 
 const Field = function FieldArea(props){
     return(
@@ -11,8 +13,11 @@ const Field = function FieldArea(props){
         <label className='' htmlFor={props.name} >
           <h5>{props.title}: </h5>
         </label>
-        <input type='number' onChange={props.onChange} name={props.name} 
-        value ={props.value} id={props.name} className='form-control' /> 
+        <Cleave value={props.value} name={props.name}
+                id={props.name} className='form-control'
+                options={{numeral: true,
+                numeralThousandsGroupStyle: 'thousand'}}
+                onChange={props.onChange}/>
       </div>  
     );
 };
@@ -133,7 +138,12 @@ const Spinner = class SpinnerButton extends React.Component{
     }
 }
 
+const formatCash = function addThousandSeperator(amount){
+  return new Intl.NumberFormat().format(amount)
+}
+
 const Form = function InputForm(props) {
+  const a =formatCash(props.state.savings);
   return(
       <form className='form-horizontal' onSubmit={props.handleSubmit}>  
         <Field name='years_to_ret' value={props.state.years_to_ret} 
@@ -142,7 +152,7 @@ const Form = function InputForm(props) {
         <Field name='duration' value={props.state.duration} 
         onChange={props.handler} title='Duration of Simulation' />
         
-        <Field name='savings' value={props.state.savings} 
+        <Field name='savings' value={(props.state.savings)} 
         onChange={props.handler} title='Current Savings' />
 
         <Field name='contribution' value={props.state.contribution}

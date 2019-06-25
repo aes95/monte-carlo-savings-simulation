@@ -89,13 +89,14 @@ class Data extends React.Component{
 
   handleChange(e){
     const field = e.target.name;
-    const value = Math.max(e.target.value,0);
-    this.setState({[field] : value.toString()});
+    const value = Math.max(e.target.rawValue,0);
+    const new_value = !Number.isNaN(value) ? value : this.state[field]
+    this.setState({[field] : new_value.toString()});
   }
 
   handleAllocChange(e){
     const field = e.target.name;
-    const value = Math.max(e.target.value,0);
+    const value = Math.max(e.target.rawValue,0);
     const alloc = this.state.allocation;
     alloc[field] = value.toString(); 
     this.setState({allocation : alloc});
@@ -103,7 +104,6 @@ class Data extends React.Component{
   
 
   render(){
-    
     return (
       <div className='container-fluid'>
         <p>A Monte Carlo simulator to project your future financial position, given your individual parameters and historical market performance. This simulation supports dynamic changes to asset allocation throughout the simulation period. </p>

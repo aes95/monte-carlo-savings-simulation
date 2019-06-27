@@ -2,7 +2,7 @@ import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
 import { simRunner, survival } from './simulation';
-import { Results, Form } from './components/components.js';
+import { Form, Results } from './components/components.js';
 
 class Data extends React.Component{
   constructor(props){
@@ -11,6 +11,7 @@ class Data extends React.Component{
     this.handleChange = this.handleChange.bind(this);
     this.handleAllocChange = this.handleAllocChange.bind(this);
     this.handleSim = this.handleSim.bind(this);
+    this.handleSimNumChange = this.handleSimNumChange.bind(this);
     this.state = {
       loaded: false,
       loading: false,
@@ -25,10 +26,11 @@ class Data extends React.Component{
         end_equity: '20',
         end_bond: '80'
       },
+      simRunsNum: '1000',
       returns: [],
       outcomes: {},
     };
-  }
+  };
 
   componentDidMount(){
     fetch('https://calc-project.herokuapp.com/api/index/')
@@ -66,19 +68,28 @@ class Data extends React.Component{
   handleSim(){
     simRunner(this.state)
     .then((scenarios)=>{
-      window.localStorage.setItem('scenarios', JSON.stringify(scenarios))
       this.setState({
         loaded: true,
         loading: false,
         outcomes: {
+          runs: this.state.simRunsNum,
           median: scenarios[Math.floor(scenarios.length /2)],
           buttom10:  scenarios[Math.floor(scenarios.length /10)],
+          buttom25:  scenarios[Math.floor(scenarios.length /100 *25)],
+          top25:  scenarios[Math.floor(scenarios.length /100 * 75)],
           top10:  scenarios[Math.floor(scenarios.length /10 * 9)],
           survival: survival(scenarios),
         },
       })
     })
-  }
+  };
+
+handleSimNumChange(e){
+  e.preventDefault();
+  this.setState({
+    simRunsNum: e.target.value
+  })
+}
 
   handleSubmit(e){
     e.preventDefault();
@@ -106,14 +117,15 @@ class Data extends React.Component{
   render(){
     return (
       <div className='container-fluid'>
-        <p>A Monte Carlo simulator to project your future financial position, given your individual parameters and historical market performance. This simulation supports dynamic changes to asset allocation throughout the simulation period. </p>
+        <p>A <a href='https://www.investopedia.com/terms/m/montecarlosimulation.asp'> Monte Carlo simulator </a> to project your future financial position, given your individual parameters and historical market performance. This simulation supports dynamic changes to asset allocation throughout the simulation period. </p>
         <p>This project is for illustrative purposes only. This tool should not be used for financial or investment advice. This tool has not been subject to rigorous testing and may contain errors.</p>
         <Form handleSubmit={this.handleSubmit} handler={this.handleChange} 
             state={this.state} handleAllocChange={this.handleAllocChange}
-            handleSim={this.handleSim}  />
+            handleSim={this.handleSim}  handleSelectChange={this.handleSimNumChange}/>
 
         {this.state.loaded && <Results title={this.state.outcomes.survival} 
-          data={this.state.outcomes} duration={this.state.duration} />}
+          data={this.state.outcomes} duration={this.state.duration} 
+          outcomes={this.state.outcomes} />}
 
       </div>      
     )

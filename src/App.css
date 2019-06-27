@@ -1,5 +1,5 @@
 body{
-  background-color: #dddddd;
+  background-color: #CCEAFF;
 }
 
 .container {
@@ -14,17 +14,12 @@ body{
 }
 
 header{
-  background-color: #aaaaaa;
+  background-color: #0067CC;
   color: white;
 }
 .header{
   padding: .5rem;
   margin: auto;
-}
-
-
-form{
-
 }
 
 label > h5{

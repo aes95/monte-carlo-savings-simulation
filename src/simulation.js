@@ -99,7 +99,7 @@ const simRunner = function runSimulation(state){
             state.contribution, state.ret_income);
         const results = [];
         const asset_data = JSON.parse(window.localStorage.getItem('asset_data'));
-        for (let i = 0; i < 100; i += 1){
+        for (let i = 0; i < parseInt(state.simRunsNum); i += 1){
             const returns =  wReturnArr(asset_data, state.allocation, state.duration);
             results.push(outcome(returns, cashflows ));
         }

@@ -48,25 +48,27 @@ const wReturnArr =  function generateWeightedReturnArr(data, alloc, period){
     })
 }
 
-const flow = function generateCashFlows (savings, time_to_ret, period, contrib, dist){
+const flow = function generateCashFlows (savings, time_to_ret, period, contrib, dist, infl=0){
     /**
-    * Takes inital savings
+    * Takes inital savings, 
     * @param {string} savings - inital savings
     * @param {string} time_to_ret - years making contributions before taking distributions
     * @param {string} period - number of years to perform simulation over
     * @param {string} contrib - monthly contribution over time_to_ret starting at the end of the first month
     * @param {string} dist - annual distribution after time_to_ret
+    * @param {string} infl - annual inflation rate
     * @return {Array} - listing of monthly cashflows during simulation period
     */
    const cashflows = Array(period * 12 +1).fill(0);
    const breakpoint = time_to_ret * 12;
+   const inf_factor = (Decimal(1).plus(Decimal(infl).div(100))).pow(Decimal(1/12));
    return cashflows.map( (i, j) => {
        if (j === 0){
            return savings;
        }else if (j <= breakpoint){
-           return Decimal(contrib);
+           return Decimal(contrib).times(inf_factor.pow(j));
        }else{
-           return Decimal(dist).div('-12');
+           return Decimal(dist).div('-12').times(inf_factor.pow(j));
        }
    } )
 }
@@ -93,19 +95,18 @@ const outcome = function calcOutcome (returns, cashflows ){
 }
 
 const simRunner = function runSimulation(state){
-    const prmoise = new Promise((resolve)=>{
-        //Generate cashflows
+    return new Promise((resolve)=>{
         const cashflows = flow(state.savings, state.years_to_ret, state.duration,
-            state.contribution, state.ret_income);
+            state.contribution, state.ret_income, state.inflation);
+        const iterations = parseInt(state.simRunsNum);
         const results = [];
         const asset_data = JSON.parse(window.localStorage.getItem('asset_data'));
-        for (let i = 0; i < parseInt(state.simRunsNum); i += 1){
+        for (let i = 0; i < iterations; i += 1){
             const returns =  wReturnArr(asset_data, state.allocation, state.duration);
             results.push(outcome(returns, cashflows ));
         }
         resolve(results.sort((arr1, arr2)=>arr1[arr1.length -1] - arr2[arr2.length-1]))
     })
-    return prmoise
 }
 
 const survival = function calcSurvivalRate(scenarios){
@@ -125,7 +126,6 @@ const maxDrawdown = function calcMaxDrawdown(values){
     const step1 = peak.minus(values[i]);
     const step2 = step1.div(peak);
     const DD = step2.times(100);
-    //const DD = 100.0 * (peak - values[i]) / peak;
     MMD = DD.greaterThan(MMD) ? DD : MMD;
   }
   return MMD.toDecimalPlaces(2).toString();

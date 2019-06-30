@@ -16,23 +16,28 @@ class Data extends React.Component{
       loaded: false,
       loading: false,
       years_to_ret: '30',
-      duration: '50',
-      savings: '50000',
-      contribution: '1000',
+      duration: '45',
+      savings: '100000',
+      contribution: '1200',
       ret_income: '100000',
       allocation: {
-        beg_equity: '60',
-        beg_bond: '40',
+        beg_equity: '75',
+        beg_bond: '25',
         end_equity: '20',
         end_bond: '80'
       },
       simRunsNum: '1000',
-      returns: [],
+      inflation: '1.8',
       outcomes: {},
     };
   };
 
   componentDidMount(){
+    if (window.localStorage.getItem('asset_data')){
+      if (window.localStorage.getItem('asset_data').length > 500){
+        return
+      }
+    }
     fetch('https://calc-project.herokuapp.com/api/index/')
     .then((res) => {
       if (!res.ok){
@@ -57,7 +62,7 @@ class Data extends React.Component{
         bond: bond_data,
         equity: equity_data,
       }
-      window.localStorage.setItem('asset_data', JSON.stringify(asset_data))
+      window.localStorage.setItem('asset_data', JSON.stringify(asset_data));
   })
   .catch((error) => {
     console.log(error);
@@ -71,7 +76,7 @@ class Data extends React.Component{
       this.setState({
         loaded: true,
         loading: false,
-        outcomes: {
+        outcomes: { 
           runs: this.state.simRunsNum,
           median: scenarios[Math.floor(scenarios.length /2)],
           buttom10:  scenarios[Math.floor(scenarios.length /10)],

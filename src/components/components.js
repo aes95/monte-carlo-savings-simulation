@@ -11,7 +11,7 @@ const Field = function FieldArea(props){
     return(
       <div id='form-group row'> 
         <label className='' htmlFor={props.name} >
-          <h5>{props.title}: </h5>
+          <h5>{props.title} </h5>
         </label>
         <Cleave value={props.value} name={props.name}
                 id={props.name} className='form-control'
@@ -177,9 +177,12 @@ const Form = function InputForm(props) {
         <Field name='end_bond' value={props.state.allocation.end_bond}
         onChange={props.handleAllocChange} title='Final Fixed Income Allocation (%)' />
 
+        <Field name='inflation' value={props.state.inflation} onChange={props.handler}
+        title='Assumed inflation (%)'></Field>
+
         <div id='form-group row'> 
           <label className='' htmlFor='num-sim' >
-            <h5>Number of Simulation Runs: </h5>
+            <h5>Number of Simulation Iterations: </h5>
           </label>
           <select className="form-control" onChange={props.handleSelectChange} value={props.state.simRunsNum}>
             <option value='100'>100</option>

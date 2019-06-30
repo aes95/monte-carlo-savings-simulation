@@ -57,7 +57,7 @@ test('Weight returns in accordence with monthly allocations', () =>{
 })
 
 
-test('cashflows are withing range', ()=>{
+test('cashflows are within range', ()=>{
   const savings = '100000';
   const time_to_ret = '5';
   const period = '10';

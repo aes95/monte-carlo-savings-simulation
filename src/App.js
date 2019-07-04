@@ -3,6 +3,7 @@ import React from 'react';
 import './App.css';
 import { simRunner, survival } from './simulation';
 import { Form, Results } from './components/components.js';
+import { string, object } from 'yup'; 
 
 class Data extends React.Component{
   constructor(props){

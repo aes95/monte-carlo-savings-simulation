@@ -31,8 +31,19 @@ label > h5{
 }
 
 button{
-  margin-top: 1rem;
+  margin-top: .25rem;
   width: 100%;
+}
+
+.field-name{
+  margin-bottom: .25rem;
+}
+
+.error{
+  color: red;
+  list-style-type: none;
+  padding: .25rem;
+  margin-bottom: .25rem;
 }
 
 @keyframes spinner {

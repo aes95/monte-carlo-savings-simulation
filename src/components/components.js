@@ -10,7 +10,7 @@ import Cleave from 'cleave.js/react';
 const Field = function FieldArea(props){
     return(
       <div id='form-group row'> 
-        <label className='' htmlFor={props.name} >
+        <label className='field-name' htmlFor={props.name} >
           <h5>{props.title} </h5>
         </label>
         <Cleave value={props.value} name={props.name}
@@ -148,6 +148,7 @@ const Spinner = class SpinnerButton extends React.Component{
 }
 
 const Form = function InputForm(props) {
+  const errors = props.errors.map((i, idx)=> <li key={idx}> {i} </li> )
   return(
       <form className='form-horizontal' onSubmit={props.handleSubmit}>  
         <Field name='years_to_ret' value={props.state.years_to_ret} 
@@ -181,7 +182,7 @@ const Form = function InputForm(props) {
         title='Assumed inflation (%)'></Field>
 
         <div id='form-group row'> 
-          <label className='' htmlFor='num-sim' >
+          <label className='field-name' htmlFor='num-sim' >
             <h5>Number of Simulation Iterations: </h5>
           </label>
           <select className="form-control" onChange={props.handleSelectChange} value={props.state.simRunsNum}>
@@ -193,11 +194,13 @@ const Form = function InputForm(props) {
           </select>
         </div>  
 
-        <div id='logger'></div>
+        {props.errors.length > 0  && 
+            <ul className='error'> {errors} </ul>  }
+
         {props.state.loading
         ? <Spinner data={props.state} handler={props.handleSim} /> 
-        : <button type='submit' id='submit-btn' 
-          className='btn btn-primary'>Simulate!</button>}        
+        : <button type='submit' id='submit-btn' className='btn btn-primary'
+          disabled={props.errors.length > 0} >Simulate!</button>}        
       </form>
   )
 }

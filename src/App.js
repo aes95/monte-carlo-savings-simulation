@@ -3,7 +3,7 @@ import React from 'react';
 import './App.css';
 import { simRunner, survival } from './simulation';
 import { Form, Results } from './components/components.js';
-import { string, object } from 'yup'; 
+import { Decimal } from 'decimal.js';
 
 class Data extends React.Component{
   constructor(props){
@@ -13,9 +13,11 @@ class Data extends React.Component{
     this.handleAllocChange = this.handleAllocChange.bind(this);
     this.handleSim = this.handleSim.bind(this);
     this.handleSimNumChange = this.handleSimNumChange.bind(this);
+    this.validateForm = this.validateForm.bind(this);
     this.state = {
       loaded: false,
       loading: false,
+      error_list: [],
       years_to_ret: '30',
       duration: '45',
       savings: '100000',
@@ -66,8 +68,7 @@ class Data extends React.Component{
       window.localStorage.setItem('asset_data', JSON.stringify(asset_data));
   })
   .catch((error) => {
-    console.log(error);
-    document.getElementById('logger').innerHTML = error;
+    this.state.error_list.push(error)
   })
 }
 
@@ -116,8 +117,24 @@ handleSimNumChange(e){
     const value = Math.max(e.target.rawValue,0);
     const alloc = this.state.allocation;
     alloc[field] = value.toString(); 
-    this.setState({allocation : alloc});
-  }
+    this.setState({
+      allocation : alloc
+    }, 
+      this.validateForm()
+    )};
+
+  validateForm(){
+    const errors = [];
+    const alloc = this.state.allocation;
+    if((Decimal(alloc.beg_bond).add(alloc.beg_equity)).greaterThan(100)){
+      errors.push(`Beginning allocations must be less than or equal to 100%. It is currently ${Decimal(alloc.beg_bond).add(alloc.beg_equity)}%`);
+    } if((Decimal(alloc.end_bond).add(alloc.end_equity)).greaterThan(100)){
+      errors.push(`Endining allocations must be less than or equal to 100%  It is currently ${Decimal(alloc.end_bond).add(alloc.end_equity)}%`);
+    }    
+    return this.setState({
+      error_list: errors,
+    });
+  };
   
 
   render(){
@@ -127,7 +144,9 @@ handleSimNumChange(e){
         <p>This project is for illustrative purposes only. This tool should not be used for financial or investment advice. This tool has not been subject to rigorous testing and may contain errors.</p>
         <Form handleSubmit={this.handleSubmit} handler={this.handleChange} 
             state={this.state} handleAllocChange={this.handleAllocChange}
-            handleSim={this.handleSim}  handleSelectChange={this.handleSimNumChange}/>
+            handleSim={this.handleSim}  handleSelectChange={this.handleSimNumChange}
+            errors={this.state.error_list} />
+        
 
         {this.state.loaded && <Results title={this.state.outcomes.survival} 
           data={this.state.outcomes} duration={this.state.duration} 

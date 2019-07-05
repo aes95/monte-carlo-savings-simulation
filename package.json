@@ -6,8 +6,8 @@
   "dependencies": {
     "cleave.js": "^1.5.0",
     "decimal.js": "^10.2.0",
-    "gh-pages": "^2.0.1",
     "install": "^0.12.2",
+    "netlify-cli": "^2.11.23",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-plotly.js": "^2.3.0",

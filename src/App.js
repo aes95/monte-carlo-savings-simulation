@@ -4,7 +4,7 @@ import './App.css';
 import { simRunner, survival } from './simulation';
 import { Form, Results, AboutContent } from './components/components.js';
 import { Decimal } from 'decimal.js';
-import { BrowserRouter as Router, Route, Link, NavLink } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 class Data extends React.Component{
   constructor(props){
@@ -50,7 +50,6 @@ class Data extends React.Component{
       return res.json()
     })
     .then((data) => {
-      console.log(data);
       const equity_data = [];
       const bond_data = [];
       data.forEach((i) => {
@@ -164,12 +163,12 @@ function Header(){
     <header data-spy="affix" data-offset-top="80" className="header-main --default affix">
       <div className="--wrap header-container">
           <h1 className='header'>
-            <NavLink to='/'> 
+            <Link to='/'> 
               Monte Carlo Retirement Simulator 
-            </NavLink> 
+            </Link> 
           </h1>
           <h4 className='header'> 
-            <NavLink to='/about' activeStyle={{color:'white'}}> About </NavLink>
+            <Link to='/about'> About </Link>
           </h4>
       </div>
     </header>

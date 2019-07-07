@@ -2,17 +2,16 @@
   "name": "fincalc",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://aes95.github.io/monte-carlo-savings-simulation",
   "dependencies": {
     "cleave.js": "^1.5.0",
     "decimal.js": "^10.2.0",
     "install": "^0.12.2",
-    "netlify-cli": "^2.11.23",
+    "now": "^15.6.2",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-plotly.js": "^2.3.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.0.1"
+    "react-scripts": "^3.0.1"
   },
   "scripts": {
     "predeploy": "npm run build",
@@ -20,7 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --modulePaths=src",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "now-dev": "react-scripts start"
   },
   "eslintConfig": {
     "extends": "react-app"
